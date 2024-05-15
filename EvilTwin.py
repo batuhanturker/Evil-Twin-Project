@@ -153,7 +153,7 @@ def create_override_conf():
             override_conf_file.write(override_conf_icerik)
         
         subprocess.run(["cp", "override.conf", "/etc/apache2/conf-available/"], check=True)
-        print("override.conf dosyası oluşturuldu ve /etc/apache2/conf-available/ dizinine kopyalandı.")
+        print("override.conf created /etc/apache2/conf-available/")
     except Exception as e:
         print("Error occurred:", e)
 
