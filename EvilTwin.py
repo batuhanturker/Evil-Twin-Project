@@ -107,7 +107,7 @@ def start_access_point(internet_interface, broadcast_interface):
         sys.exit(1)
 
 def show_banner():
-    banner = """
+    banner1= """
    ___________     .__.__    ___________       .__        
    \_   _____/__  _|__|  |   \__    ___/_  _  _|__| ____  
    |    __)_\  \/ /  |  |     |    |  \ \/ \/ /  |/    \ 
@@ -121,7 +121,17 @@ def show_banner():
    |____|     |__|   \____/\__|  |\___  >\___  >__|      
                           \______|    \/     \/                                       
 """
-    print(banner)
+
+    banner2 = """
+   By \033[1;32mhttps://github.com/batuhanturker\033[0m, 
+      \033[1;34mhttps://github.com/aykutemreyalcin\033[0m, 
+      \033[1;31mhttps://github.com/fdemirhisar\033[0m 
+
+"""
+    print(banner1)
+    print(banner2)
+
+
 
 def start_wireshark(interface):
     try:
@@ -143,7 +153,7 @@ def create_override_conf():
             override_conf_file.write(override_conf_icerik)
         
         subprocess.run(["cp", "override.conf", "/etc/apache2/conf-available/"], check=True)
-        print("override.conf created /etc/apache2/conf-available/")
+        print("override.conf dosyası oluşturuldu ve /etc/apache2/conf-available/ dizinine kopyalandı.")
     except Exception as e:
         print("Error occurred:", e)
 
