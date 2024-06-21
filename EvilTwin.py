@@ -37,7 +37,7 @@ def select_interface(interfaces, prompt):
             print("\033[91mInvalid choice. Please select a valid interface number.\033[0m")
 
 def write_config_files(interface, ssid):
-    hostapd_conf_icerik = f"""
+    hostapd_conf_content = f"""
 interface={interface}
 driver=nl80211
 ssid={ssid}
@@ -49,7 +49,7 @@ auth_algs=1
 ignore_broadcast_ssid=0
 """
 
-    dnsmasq_conf_icerik = f"""
+    dnsmasq_conf_content = f"""
 interface=br0
 listen-address=10.1.1.1
 no-hosts
@@ -70,11 +70,12 @@ address=/gstatic.com/10.1.1.1
 address=/googleapis.com/10.1.1.1
 address=/android.com/10.1.1.1
 """
+
     with open("/etc/hostapd/hostapd.conf", "w") as hostapd_conf_file:
-        hostapd_conf_file.write(hostapd_conf_icerik)
+        hostapd_conf_file.write(hostapd_conf_content)
 
     with open("/etc/dnsmasq.conf", "w") as dnsmasq_conf_file:
-        dnsmasq_conf_file.write(dnsmasq_conf_icerik)
+        dnsmasq_conf_file.write(dnsmasq_conf_content)
 
 def start_access_point(internet_interface, broadcast_interface):
     try:
@@ -131,8 +132,6 @@ def show_banner():
     print(banner1)
     print(banner2)
 
-
-
 def start_wireshark(interface):
     try:
         subprocess.run(["wireshark", "-i", interface, "-k", "-f", "tcp port 80 or tcp port 443 or ftp"], check=True)
@@ -140,7 +139,7 @@ def start_wireshark(interface):
         print("Error occurred:", e)
 
 def create_override_conf():
-    override_conf_icerik = """
+    override_conf_content = """
 <Directory /var/www/>
     Options Indexes FollowSymLinks MultiViews
     AllowOverride All
@@ -150,9 +149,11 @@ def create_override_conf():
 """
     try:
         with open("override.conf", "w") as override_conf_file:
-            override_conf_file.write(override_conf_icerik)
+            override_conf_file.write(override_conf_content)
         
         subprocess.run(["cp", "override.conf", "/etc/apache2/conf-available/"], check=True)
+        subprocess.run(["a2enconf", "override"], check=True)
+        subprocess.run(["service", "apache2", "restart"], check=True)
         print("override.conf created /etc/apache2/conf-available/")
     except Exception as e:
         print("Error occurred:", e)
@@ -175,3 +176,4 @@ if __name__ == "__main__":
     start_access_point(internet_interface, broadcast_interface)
     start_wireshark(broadcast_interface)
     time.sleep(1)
+
